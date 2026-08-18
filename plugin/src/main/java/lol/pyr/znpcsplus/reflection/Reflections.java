@@ -149,9 +149,12 @@ public final class Reflections {
      */
 
     public static final Class<?> SERVER_LEVEL_CLASS =
-            new ReflectionBuilder(ReflectionPackage.SERVER_LEVEL)
-                    .withClassName("ServerLevel")
-                    .toClassReflection().get();
+            PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_26_2)
+                    ? new ReflectionBuilder(ReflectionPackage.SERVER_LEVEL)
+                            .withClassName("ServerLevel")
+                            .withClassName("WorldServer")
+                            .toClassReflection().get()
+                    : null;
 
     public static final ReflectionLazyLoader<AtomicInteger> ATOMIC_ENTITY_ID_FIELD_26_2 =
             new ReflectionBuilder(ReflectionPackage.SERVER_LEVEL)
