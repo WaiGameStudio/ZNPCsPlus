@@ -29,6 +29,7 @@ import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.conversion.DataImporterRegistry;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
+import lol.pyr.znpcsplus.integration.spigotmaster.SpigotMasterIntegration;
 import lol.pyr.znpcsplus.interaction.ActionFactoryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistryImpl;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
@@ -149,6 +150,9 @@ public class ZNpcsPlus {
 
         bungeeConnector.registerChannel();
         shutdownTasks.add(bungeeConnector::unregisterChannel);
+
+        // Initialize SpigotMaster integration
+        SpigotMasterIntegration.initialize();
 
         typeRegistry.registerDefault(packetEvents, propertyRegistry);
         actionRegistry.registerTypes(scheduler, adventure, textSerializer, bungeeConnector);
