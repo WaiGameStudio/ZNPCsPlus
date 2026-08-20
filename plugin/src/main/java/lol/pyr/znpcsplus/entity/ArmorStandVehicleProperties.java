@@ -24,6 +24,8 @@ public class ArmorStandVehicleProperties implements PropertyHolder {
         _setProperty(propertyRegistry.getByName("small", Boolean.class), true);
         _setProperty(propertyRegistry.getByName("invisible", Boolean.class), true);
         _setProperty(propertyRegistry.getByName("base_plate", Boolean.class), false);
+        _setProperty(propertyRegistry.getByName("no_gravity", Boolean.class), true);
+        _setProperty(propertyRegistry.getByName("marker", Boolean.class), true);
     }
 
     @SuppressWarnings("unchecked")

@@ -19,6 +19,8 @@ public class HologramText extends HologramLine<Component> {
         super(viewable, text, packetFactory, EntityTypes.ARMOR_STAND, location);
         addProperty(propertyRegistry.getByName("name"));
         addProperty(propertyRegistry.getByName("invisible"));
+        addProperty(propertyRegistry.getByName("no_gravity"));
+        addProperty(propertyRegistry.getByName("marker"));
     }
 
     @Override
@@ -31,12 +33,17 @@ public class HologramText extends HologramLine<Component> {
     @Override
     public <T> T getProperty(EntityProperty<T> key) {
         if (key.getName().equalsIgnoreCase("invisible")) return (T) Boolean.TRUE;
+        if (key.getName().equalsIgnoreCase("no_gravity")) return (T) Boolean.TRUE;
+        if (key.getName().equalsIgnoreCase("marker")) return (T) Boolean.TRUE;
         if (key.getName().equalsIgnoreCase("name")) return (T) getValue();
         return super.getProperty(key);
     }
 
     @Override
     public boolean hasProperty(EntityProperty<?> key) {
-        return key.getName().equalsIgnoreCase("name") || key.getName().equalsIgnoreCase("invisible");
+        return key.getName().equalsIgnoreCase("name")
+            || key.getName().equalsIgnoreCase("invisible")
+            || key.getName().equalsIgnoreCase("no_gravity")
+            || key.getName().equalsIgnoreCase("marker");
     }
 }

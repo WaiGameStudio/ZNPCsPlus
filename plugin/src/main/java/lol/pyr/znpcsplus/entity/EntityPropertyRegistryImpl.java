@@ -156,8 +156,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
         register(new BitsetProperty("invisible", 0, 0x20));
+        register(new BitsetProperty("no_gravity", 0, 0x02));
         register(new HologramItemProperty());
-        linkProperties("glow", "fire", "invisible");
+        linkProperties("glow", "fire", "invisible", "no_gravity");
         register(new BooleanProperty("silent", 4, false, legacyBooleans));
 
         // Attribute Max Health
@@ -232,8 +233,9 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         else armorStandIndex = 10;
         register(new BitsetProperty("small", armorStandIndex, 0x01));
         register(new BitsetProperty("arms", armorStandIndex, 0x04));
-        register(new BitsetProperty("base_plate", armorStandIndex++, 0x08, true));
-        linkProperties("small", "arms", "base_plate");
+        register(new BitsetProperty("base_plate", armorStandIndex, 0x08, true));
+        register(new BitsetProperty("marker", armorStandIndex++, 0x10));
+        linkProperties("small", "arms", "base_plate", "marker");
         register(new RotationProperty("head_rotation", armorStandIndex++, Vector3f.zero()));
         register(new RotationProperty("body_rotation", armorStandIndex++, Vector3f.zero()));
         register(new RotationProperty("left_arm_rotation", armorStandIndex++, new Vector3f(-10, 0, -10)));
