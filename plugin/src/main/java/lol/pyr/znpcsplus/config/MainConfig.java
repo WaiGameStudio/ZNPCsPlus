@@ -78,4 +78,24 @@ public interface MainConfig {
     @ConfComments("Should the plugin fake the enforce secure chat packet to hide the popup?")
     @DefaultBoolean(false)
     boolean fakeEnforceSecureChat();
+
+    @ConfKey("sitting-offset")
+    @ConfComments({
+            "The Y offset for sitting NPCs (armor stand vehicle position)",
+            "Default: -0.55 (Geyser-compatible)",
+            "Java-only servers may prefer: -0.9",
+            "Adjust this value if sitting NPCs appear too high or clip into the ground"
+    })
+    @DefaultDouble(-0.55D)
+    double sittingOffset();
+
+    @ConfKey("independent-hologram")
+    @ConfComments({
+            "Use independent hologram entities that don't support vehicle/passenger mechanics",
+            "When enabled, holograms are completely standalone and recalculate position on every NPC move",
+            "Default: false (use standard PacketEntity with vehicle support)",
+            "Enable this if you experience hologram positioning issues or want cleaner hologram code paths"
+    })
+    @DefaultBoolean(false)
+    boolean independentHologram();
 }

@@ -12,14 +12,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
 import lol.pyr.znpcsplus.util.Viewable;
 
 public class HologramItem extends HologramLine<ItemStack> {
-    public HologramItem(Viewable viewable,  EntityPropertyRegistryImpl propertyRegistry, PacketFactory packetFactory, NpcLocation location, ItemStack item) {
-        super(viewable, item, packetFactory, EntityTypes.ITEM, location);
+    public HologramItem(Viewable viewable, EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, PacketFactory packetFactory, NpcLocation location, ItemStack item) {
+        super(viewable, item, packetFactory, EntityTypes.ITEM, location, configManager);
         addProperty(propertyRegistry.getByName("holo_item"));
     }
 
@@ -32,7 +33,7 @@ public class HologramItem extends HologramLine<ItemStack> {
 
     @Override
     public void setLocation(NpcLocation location) {
-        super.setLocation(location.withY(location.getY() + 2.05));
+        super.setLocation(location.withY(location.getY() + 0.075D));
     }
 
     public static boolean ensureValidItemInput(String in) {

@@ -156,9 +156,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
         register(new BitsetProperty("invisible", 0, 0x20));
-        register(new BitsetProperty("no_gravity", 0, 0x02));
+        if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) {
+            register(new BooleanProperty("no_gravity", 5, false, false));
+        }
         register(new HologramItemProperty());
-        linkProperties("glow", "fire", "invisible", "no_gravity");
+        linkProperties("glow", "fire", "invisible");
         register(new BooleanProperty("silent", 4, false, legacyBooleans));
 
         // Attribute Max Health
@@ -203,7 +205,7 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
             register(new BooleanProperty("baby", babyIndex, false, legacyBooleans));
         }
 
-        register(new EntitySittingProperty(packetFactory, this));
+        register(new EntitySittingProperty(packetFactory, this, configManager));
 
         // Player
         register(new DummyProperty<>("skin", SkinDescriptor.class, false));

@@ -30,18 +30,20 @@ public class HologramImpl extends Viewable implements Hologram {
     private long refreshDelay = -1;
     private long lastRefresh = System.currentTimeMillis();
     private NpcLocation location;
+    private double entityHeight;
     private final List<HologramLine<?>> lines = new ArrayList<>();
 
-    public HologramImpl(EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, NpcLocation location) {
+    public HologramImpl(EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, PacketFactory packetFactory, LegacyComponentSerializer textSerializer, NpcLocation location, double entityHeight) {
         this.propertyRegistry = propertyRegistry;
         this.configManager = configManager;
         this.packetFactory = packetFactory;
         this.textSerializer = textSerializer;
         this.location = location;
+        this.entityHeight = entityHeight;
     }
 
     public void addTextLineComponent(Component line) {
-        HologramText newLine = new HologramText(this, propertyRegistry, packetFactory, null, line);
+        HologramText newLine = new HologramText(this, propertyRegistry, configManager, packetFactory, null, line);
         lines.add(newLine);
         relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
@@ -61,7 +63,7 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void addItemLinePEStack(ItemStack item) {
-        HologramItem newLine = new HologramItem(this, propertyRegistry, packetFactory, null, item);
+        HologramItem newLine = new HologramItem(this, propertyRegistry, configManager, packetFactory, null, item);
         lines.add(newLine);
         relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
@@ -103,7 +105,7 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void insertTextLineComponent(int index, Component line) {
-        HologramText newLine = new HologramText(this, propertyRegistry, packetFactory, null, line);
+        HologramText newLine = new HologramText(this, propertyRegistry, configManager, packetFactory, null, line);
         lines.add(index, newLine);
         relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
@@ -118,7 +120,7 @@ public class HologramImpl extends Viewable implements Hologram {
     }
 
     public void insertItemLinePEStack(int index, ItemStack item) {
-        HologramItem newLine = new HologramItem(this, propertyRegistry, packetFactory, null, item);
+        HologramItem newLine = new HologramItem(this, propertyRegistry, configManager, packetFactory, null, item);
         lines.add(index, newLine);
         relocateLines();
         for (Player viewer : getViewers()) newLine.show(viewer.getPlayer());
@@ -177,9 +179,15 @@ public class HologramImpl extends Viewable implements Hologram {
         relocateLines();
     }
 
+    public void setLocation(NpcLocation location, double entityHeight) {
+        this.location = location;
+        this.entityHeight = entityHeight;
+        relocateLines();
+    }
+
     private void relocateLines() {
         final double lineSpacing = configManager.getConfig().lineSpacing();
-        double height = location.getY() + (lines.size() - 1) * lineSpacing + getOffset();
+        double height = location.getY() + entityHeight + (lines.size() - 1) * lineSpacing + getOffset();
         for (HologramLine<?> line : lines) {
             line.setLocation(location.withY(height));
             height -= lineSpacing;

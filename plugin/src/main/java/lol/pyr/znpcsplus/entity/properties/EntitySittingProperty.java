@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.entity.properties;
 
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.ArmorStandVehicleProperties;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
@@ -14,11 +15,13 @@ import java.util.Map;
 public class EntitySittingProperty extends EntityPropertyImpl<Boolean> {
     private final PacketFactory packetFactory;
     private final EntityPropertyRegistryImpl propertyRegistry;
+    private final ConfigManager configManager;
 
-    public EntitySittingProperty(PacketFactory packetFactory, EntityPropertyRegistryImpl propertyRegistry) {
+    public EntitySittingProperty(PacketFactory packetFactory, EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager) {
         super("entity_sitting", false, Boolean.class);
         this.packetFactory = packetFactory;
         this.propertyRegistry = propertyRegistry;
+        this.configManager = configManager;
     }
 
     @Override
@@ -26,8 +29,11 @@ public class EntitySittingProperty extends EntityPropertyImpl<Boolean> {
         boolean sitting = entity.getProperty(this);
         if (sitting) {
             if (entity.getVehicle() == null) {
+                // 使用可配置的偏移量，默认 -0.55 适配 Geyser 环境
+                // Java 版客户端和基岩版客户端对盔甲架乘骑的 Y 偏移处理不同
+                double offset = configManager.getConfig().sittingOffset();
                 PacketEntity vehiclePacketEntity = new PacketEntity(packetFactory, new ArmorStandVehicleProperties(propertyRegistry),
-                        entity.getViewable(), EntityTypes.ARMOR_STAND, entity.getLocation().withY(entity.getLocation().getY() - 0.9));
+                        entity.getViewable(), EntityTypes.ARMOR_STAND, entity.getLocation().withY(entity.getLocation().getY() + offset));
                 entity.setVehicle(vehiclePacketEntity);
             }
         } else if (entity.getVehicle() != null) {

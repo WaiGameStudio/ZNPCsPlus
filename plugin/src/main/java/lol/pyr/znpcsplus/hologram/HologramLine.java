@@ -4,6 +4,8 @@ import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
 import lol.pyr.znpcsplus.api.entity.PropertyHolder;
+import lol.pyr.znpcsplus.config.ConfigManager;
+import lol.pyr.znpcsplus.entity.HologramPacketEntity;
 import lol.pyr.znpcsplus.entity.PacketEntity;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
@@ -18,11 +20,21 @@ import java.util.concurrent.CompletableFuture;
 public class HologramLine<M> implements PropertyHolder {
     private M value;
     private final PacketEntity entity;
+    private final boolean independent;
     private final Set<EntityProperty<?>> properties;
 
     public HologramLine(Viewable viewable, M value, PacketFactory packetFactory, EntityType type, NpcLocation location) {
+        this(viewable, value, packetFactory, type, location, null);
+    }
+
+    public HologramLine(Viewable viewable, M value, PacketFactory packetFactory, EntityType type, NpcLocation location, ConfigManager configManager) {
         this.value = value;
-        this.entity = new PacketEntity(packetFactory, this, viewable, type, location);
+
+        independent = configManager != null && configManager.getConfig().independentHologram();
+        entity = independent
+                ? new HologramPacketEntity(packetFactory, this, viewable, type, location)
+                : new PacketEntity(packetFactory, this, viewable, type, location);
+
         this.properties = new HashSet<>();
     }
 
@@ -54,8 +66,12 @@ public class HologramLine<M> implements PropertyHolder {
         return entity.getEntityId();
     }
 
+    protected boolean isIndependent() {
+        return independent;
+    }
+
     public <T> void addProperty(EntityProperty<T> property) {
-        properties.add(property);
+        if (property != null) properties.add(property);
     }
 
     @Override

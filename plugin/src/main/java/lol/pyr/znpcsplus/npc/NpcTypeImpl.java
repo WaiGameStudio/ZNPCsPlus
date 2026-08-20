@@ -16,6 +16,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class NpcTypeImpl implements NpcType {
+    // Existing hologram offsets are entity heights minus the armor stand name-render offset.
+    private static final double ARMOR_STAND_NAME_OFFSET = 1.975D;
+
     private final EntityType type;
     private final Set<EntityPropertyImpl<?>> allowedProperties;
     private final Map<EntityPropertyImpl<?>, Object> defaultProperties;
@@ -42,6 +45,13 @@ public class NpcTypeImpl implements NpcType {
 
     public double getHologramOffset() {
         return hologramOffset;
+    }
+
+    /**
+     * Returns the entity height used as the visual base for independently positioned holograms.
+     */
+    public double getHologramHeight() {
+        return hologramOffset + ARMOR_STAND_NAME_OFFSET;
     }
 
     public float getEyeHeight() {

@@ -2,6 +2,7 @@ package lol.pyr.znpcsplus.hologram;
 
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
 import lol.pyr.znpcsplus.api.entity.EntityProperty;
+import lol.pyr.znpcsplus.config.ConfigManager;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.util.NpcLocation;
@@ -14,13 +15,21 @@ import java.util.concurrent.CompletableFuture;
 public class HologramText extends HologramLine<Component> {
 
     private static final Component BLANK  = Component.text("%blank%");
+    private static final double ARMOR_STAND_NAME_OFFSET = 1.975D;
 
-    public HologramText(Viewable viewable,  EntityPropertyRegistryImpl propertyRegistry, PacketFactory packetFactory, NpcLocation location, Component text) {
-        super(viewable, text, packetFactory, EntityTypes.ARMOR_STAND, location);
+    public HologramText(Viewable viewable, EntityPropertyRegistryImpl propertyRegistry, ConfigManager configManager, PacketFactory packetFactory, NpcLocation location, Component text) {
+        super(viewable, text, packetFactory, EntityTypes.ARMOR_STAND, location, configManager);
         addProperty(propertyRegistry.getByName("name"));
         addProperty(propertyRegistry.getByName("invisible"));
         addProperty(propertyRegistry.getByName("no_gravity"));
         addProperty(propertyRegistry.getByName("marker"));
+    }
+
+    @Override
+    public void setLocation(NpcLocation location) {
+        super.setLocation(isIndependent()
+                ? location
+                : location.withY(location.getY() - ARMOR_STAND_NAME_OFFSET));
     }
 
     @Override

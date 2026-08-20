@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class PacketEntity implements PropertyHolder {
-    private final PacketFactory packetFactory;
+    protected final PacketFactory packetFactory; // 改为 protected，允许子类访问
 
     private final PropertyHolder properties;
     private final Viewable viewable;
@@ -26,7 +26,7 @@ public class PacketEntity implements PropertyHolder {
     private final UUID uuid;
 
     private final EntityType type;
-    private NpcLocation location;
+    protected NpcLocation location; // 改为 protected，允许子类直接访问
 
     private PacketEntity vehicle;
     private Integer vehicleId;

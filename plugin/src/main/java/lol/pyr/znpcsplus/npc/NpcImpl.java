@@ -57,7 +57,7 @@ public class NpcImpl extends Viewable implements Npc {
         this.location = location;
         this.uuid = uuid;
         entity = new PacketEntity(packetFactory, this, this, type.getType(), location);
-        hologram = new HologramImpl(propertyRegistry, configManager, packetFactory, textSerializer, location.withY(location.getY() + type.getHologramOffset()));
+        hologram = new HologramImpl(propertyRegistry, configManager, packetFactory, textSerializer, location, type.getHologramHeight());
         this.attributeScaleProperty = propertyRegistry.getByName("attribute_scale", Double.class);
     }
 
@@ -65,7 +65,7 @@ public class NpcImpl extends Viewable implements Npc {
         UNSAFE_hideAll();
         this.type = type;
         entity = new PacketEntity(packetFactory, this, this, type.getType(), entity.getLocation());
-        hologram.setLocation(location.withY(location.getY() + type.getHologramOffset()));
+        hologram.setLocation(location, type.getHologramHeight());
         UNSAFE_showAll();
     }
 
@@ -109,7 +109,8 @@ public class NpcImpl extends Viewable implements Npc {
             finalLocation = finalLocation.withRotation(location.getYaw() + 180, location.getPitch());
         }
         entity.setLocation(finalLocation);
-        hologram.setLocation(finalLocation.withY(finalLocation.getY() + type.getHologramOffset()));
+        // Recalculate from the NPC logical base whenever it moves. Vehicle offsets do not apply.
+        hologram.setLocation(location);
     }
 
     public void setHeadRotation(Player player, float yaw, float pitch) {
