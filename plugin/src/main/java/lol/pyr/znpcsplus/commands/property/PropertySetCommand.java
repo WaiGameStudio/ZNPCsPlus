@@ -147,6 +147,11 @@ public class PropertySetCommand implements CommandHandler {
             }
         }
 
+        try {
+            ((EntityPropertyImpl<Object>) property).validatePlayerValue(value);
+        } catch (IllegalArgumentException exception) {
+            context.halt(Component.text(exception.getMessage(), NamedTextColor.RED));
+        }
         npc.UNSAFE_setProperty(property, value);
         if (type == Component.class && value != null) {
             context.send(Component.text("Set property " + property.getName() + " for NPC " + entry.getId() + " to ", NamedTextColor.GREEN)

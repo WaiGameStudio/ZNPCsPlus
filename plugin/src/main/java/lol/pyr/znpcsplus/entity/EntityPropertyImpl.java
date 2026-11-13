@@ -47,6 +47,9 @@ public abstract class EntityPropertyImpl<T> implements EntityProperty<T> {
         dependencies.add(property);
     }
 
+    public void validatePlayerValue(T value) {
+    }
+
     protected static <V> EntityData<V> newEntityData(int index, EntityDataType<V> type, V value) {
         return new EntityData<>(index, type, value);
     }

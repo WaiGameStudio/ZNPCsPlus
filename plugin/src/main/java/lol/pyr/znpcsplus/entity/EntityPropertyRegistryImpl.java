@@ -22,6 +22,8 @@ import lol.pyr.znpcsplus.entity.properties.villager.VillagerLevelProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerProfessionProperty;
 import lol.pyr.znpcsplus.entity.properties.villager.VillagerTypeProperty;
 import lol.pyr.znpcsplus.entity.serializers.*;
+import lol.pyr.znpcsplus.integration.ycore.YCoreIntegration;
+import lol.pyr.znpcsplus.integration.ycore.YCoreModelProperty;
 import lol.pyr.znpcsplus.packets.PacketFactory;
 import lol.pyr.znpcsplus.scheduling.TaskScheduler;
 import lol.pyr.znpcsplus.skin.cache.MojangSkinCache;
@@ -117,7 +119,8 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         boolean legacyNames = ver.isOlderThan(ServerVersion.V_1_9);
         boolean optionalComponents = ver.isNewerThanOrEquals(ServerVersion.V_1_13);
 
-        register(new EquipmentProperty(packetFactory, "helmet", EquipmentSlot.HELMET));
+        register(new EquipmentProperty(packetFactory, "helmet", EquipmentSlot.HELMET,
+                LazyLoader.of(() -> getByName("ycore_model", String.class))));
         register(new EquipmentProperty(packetFactory, "chestplate", EquipmentSlot.CHEST_PLATE));
         register(new EquipmentProperty(packetFactory, "leggings", EquipmentSlot.LEGGINGS));
         register(new EquipmentProperty(packetFactory, "boots", EquipmentSlot.BOOTS));
@@ -156,6 +159,12 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         register(new GlowProperty(packetFactory));
         register(new BitsetProperty("fire", 0, 0x01));
         register(new BitsetProperty("invisible", 0, 0x20));
+        if (YCoreIntegration.isEnabled()) {
+            register(new YCoreModelProperty(packetFactory,
+                    LazyLoader.of(() -> getByName("helmet", com.github.retrooper.packetevents.protocol.item.ItemStack.class))));
+            linkProperties("glow", "fire", "invisible", "ycore_model");
+            linkProperties("helmet", "ycore_model");
+        }
         if (ver.isNewerThanOrEquals(ServerVersion.V_1_10)) {
             register(new BooleanProperty("no_gravity", 5, false, false));
         }
@@ -859,6 +868,11 @@ public class EntityPropertyRegistryImpl implements EntityPropertyRegistry {
         sulfurCubeIndex = 19;
 
         register(new IntegerProperty("max_fuse",  sulfurCubeIndex, -1));
+
+        if (!ver.isNewerThanOrEquals(ServerVersion.V_26_3)) return;
+
+        register(new CustomTypeProperty<>("cushion_color", 8, DyeColor.WHITE, EntityDataTypes.DYE_COLOR, color ->
+                com.github.retrooper.packetevents.protocol.color.DyeColor.valueOf(color.name())));
     }
 
     private void registerSerializer(PropertySerializer<?> serializer) {

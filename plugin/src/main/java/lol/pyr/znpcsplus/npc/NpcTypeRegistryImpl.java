@@ -55,7 +55,7 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(0)
                 .setEyeHeight(1.7775F)
                 .addEquipmentProperties()
-                .addProperties("small", "arms", "base_plate", "head_rotation", "body_rotation", "left_arm_rotation", "right_arm_rotation", "left_leg_rotation", "right_leg_rotation"));
+                .addProperties("small", "arms", "base_plate", "head_rotation", "body_rotation", "left_arm_rotation", "right_arm_rotation", "left_leg_rotation", "right_leg_rotation", "ycore_model"));
 
         register(builder(p, "bat", EntityTypes.BAT)
                 .setHologramOffset(-1.075)
@@ -530,6 +530,21 @@ public class NpcTypeRegistryImpl implements NpcTypeRegistry {
                 .setHologramOffset(-1.485)
                 .setEyeHeight(0.175F)
                 .addProperties("body", "max_fuse"));
+
+        if (!version.isNewerThanOrEquals(ServerVersion.V_26_3)) return;
+
+        register(builder(p, "cushion", EntityTypes.CUSHION)
+                .setHologramOffset(-1.725)
+                .setEyeHeight(0.2125F)
+                .addProperties("cushion_color"));
+
+        register(builder(p, "poplar_boat", EntityTypes.POPLAR_BOAT)
+                .setHologramOffset(-1.4125)
+                .setEyeHeight(0.45F));
+
+        register(builder(p, "poplar_chest_boat", EntityTypes.POPLAR_CHEST_BOAT)
+                .setHologramOffset(-1.4125)
+                .setEyeHeight(0.45F));
     }
 
     public Collection<NpcType> getAll() {

@@ -30,6 +30,7 @@ import lol.pyr.znpcsplus.conversion.DataImporterRegistry;
 import lol.pyr.znpcsplus.entity.EntityPropertyImpl;
 import lol.pyr.znpcsplus.entity.EntityPropertyRegistryImpl;
 import lol.pyr.znpcsplus.integration.spigotmaster.SpigotMasterIntegration;
+import lol.pyr.znpcsplus.integration.ycore.YCoreIntegration;
 import lol.pyr.znpcsplus.interaction.ActionFactoryImpl;
 import lol.pyr.znpcsplus.interaction.ActionRegistryImpl;
 import lol.pyr.znpcsplus.interaction.InteractionPacketListener;
@@ -128,6 +129,7 @@ public class ZNpcsPlus {
         shutdownTasks.add(Viewable::shutdownExecutor);
 
         PacketFactory packetFactory = setupPacketFactory(scheduler, propertyRegistry, configManager);
+        YCoreIntegration.initialize();
         propertyRegistry.registerTypes(packetFactory, textSerializer, scheduler);
 
         BungeeConnector bungeeConnector = new BungeeConnector(bootstrap);
